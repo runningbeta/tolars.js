@@ -31,13 +31,23 @@ describe('Address test.', () => {
     assert(getAddress(expectedVal) === expectedVal, 'Test failed :(');
   });
 
+  it('should test getAddress function throws for invalid checksum', () => {
+    const val = '54948c78114bc39675157e097830ae63c0da7857a19c13aec8';
+    expect(() => getAddress(val)).to.throw();
+  });
+
   it('should test isAddress function returns false for Ethereum address', () => {
     const expectedVal = false;
     assert(isAddress('0x7b00ae36c7485b678fe945c2dd9349eb5baf7b6b') === expectedVal, 'Test failed :(');
   });
 
-  it('should test awesome function returns true', () => {
+  it('should test isAddress function returns true for Tolar address', () => {
     const expectedVal = true;
     assert(isAddress('54948c78114bc39675157e097830ae63c0da7857a19c13aec7') === expectedVal, 'Test failed :(');
+  });
+
+  it('should test isAddress function returns false for Tolar address with invalid checksum', () => {
+    const expectedVal = false;
+    assert(isAddress('54948c78114bc39675157e097830ae63c0da7857a19c13aec8') === expectedVal, 'Test failed :(');
   });
 });

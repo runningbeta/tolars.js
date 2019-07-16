@@ -1,8 +1,24 @@
 import { ethers } from 'ethers';
 
 const TOLAR_ADDRESS_CHAR_LENGTH = 50;
+const TOLAR_ADDRESS_CHECKSUM_CHAR_LENGTH = 8;
 const TOLAR_ADDRESS_CHECKSUM_START_INDEX = 42;
 const TOLAR_ADDRESS_PREFIX = '54';
+/**
+ * The Ethereum address is 20 bytes long.
+.*
+ * The checksum is calculated by taking the last 4 bytes of the sha3(sha3(20bytes-addr)).
+ *
+ * @param {Ethereum address} address
+ */
+const getChecksum = (address) => {
+  const hash = ethers.utils.keccak256;
+  const ethAddress = ethers.utils.getAddress(address);
+  const digest = hash(hash(ethAddress));
+  // last 4 bytes or 8 characters
+  const startIndex = digest.length - TOLAR_ADDRESS_CHECKSUM_CHAR_LENGTH;
+  return digest.substring(startIndex);
+};
 
 /**
  * The address is 25 bytes long.
@@ -25,7 +41,8 @@ const getAddress = (address) => {
   if (!address.startsWith(TOLAR_ADDRESS_PREFIX)) throw new Error('Address should start with "54" as byte representation of "T"');
   const ethAddress = ethers.utils.getAddress(`0x${address.substring(2, TOLAR_ADDRESS_CHECKSUM_START_INDEX)}`);
   const checksum = address.substring(TOLAR_ADDRESS_CHECKSUM_START_INDEX, TOLAR_ADDRESS_CHAR_LENGTH);
-  // TODO: check checksum
+  const calculatedChecksum = getChecksum(ethAddress);
+  if (checksum !== calculatedChecksum) throw new Error('Invalid address checksum');
   return `${TOLAR_ADDRESS_PREFIX}${ethAddress.substring(2).toLowerCase()}${checksum}`;
 };
 

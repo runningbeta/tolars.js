@@ -58,6 +58,18 @@ const getChecksum = (address) => {
 };
 
 /**
+ * Generate Tolar address from Ethereum address
+ *
+ * @param {Ethereum address} address
+ */
+const fromEthereumAddress = (address) => {
+  const ethAddress = ethers.utils.getAddress(address);
+  const ethAddressNormalized = ethAddress.toLowerCase().substring(2);
+  const checksum = getChecksum(address);
+  return `${TOLAR_ADDRESS_PREFIX}${ethAddressNormalized}${checksum}`;
+};
+
+/**
  * The Ethereum address is 20 bytes long.
 .*
  * The checksum is calculated by taking the last 4 bytes of the sha3(sha3(20bytes-addr)).
@@ -98,4 +110,9 @@ const isAddress = (address) => {
   return true;
 };
 
-export { getEthereumAddress, getAddress, isAddress };
+export {
+  fromEthereumAddress,
+  getEthereumAddress,
+  getAddress,
+  isAddress
+};

@@ -1,7 +1,38 @@
 import { assert, expect } from 'chai';
-import { getAddress, isAddress } from '../src';
+import { fromEthereumAddress, getAddress, isAddress } from '../src';
+
+const TOLAR_ADDRESS_VALID_EXAMPLE_1 = '54948c78114bc39675157e097830ae63c0da7857a19c13aec7';
 
 describe('Address test.', () => {
+  it('should test fromEthereumAddress function throws on null', () => {
+    expect(() => fromEthereumAddress()).to.throw();
+  });
+
+  it('should test fromEthereumAddress function throws on invalid address #1', () => {
+    expect(() => fromEthereumAddress('ABC')).to.throw();
+  });
+
+  it('should test fromEthereumAddress function throws on invalid address #2', () => {
+    expect(() => fromEthereumAddress('0x948c78114bc39675157e097830ae63c0da7857a19c13RRR7')).to.throw();
+  });
+
+  it('should test fromEthereumAddress function throws on hex number', () => {
+    const val = 0x54948c78114bc39675157e097830ae63c0da7857a19c13aec7;
+    expect(() => fromEthereumAddress(val)).to.throw();
+  });
+
+  it('should test fromEthereumAddress function returns correct Tolar address (hex prefix)', () => {
+    const ethAddress = '0x948c78114bc39675157e097830ae63c0da7857a1';
+    const expectedVal = TOLAR_ADDRESS_VALID_EXAMPLE_1;
+    assert(fromEthereumAddress(ethAddress) === expectedVal, 'Test failed :(');
+  });
+
+  it('should test fromEthereumAddress function returns correct Tolar address (no hex prefix)', () => {
+    const ethAddress = '948c78114bc39675157e097830ae63c0da7857a1';
+    const expectedVal = TOLAR_ADDRESS_VALID_EXAMPLE_1;
+    assert(fromEthereumAddress(ethAddress) === expectedVal, 'Test failed :(');
+  });
+
   it('should test getAddress function throws on null', () => {
     expect(() => getAddress()).to.throw();
   });
@@ -27,7 +58,7 @@ describe('Address test.', () => {
   });
 
   it('should test getAddress function returns address', () => {
-    const expectedVal = '54948c78114bc39675157e097830ae63c0da7857a19c13aec7';
+    const expectedVal = TOLAR_ADDRESS_VALID_EXAMPLE_1;
     assert(getAddress(expectedVal) === expectedVal, 'Test failed :(');
   });
 
@@ -43,7 +74,7 @@ describe('Address test.', () => {
 
   it('should test isAddress function returns true for Tolar address', () => {
     const expectedVal = true;
-    assert(isAddress('54948c78114bc39675157e097830ae63c0da7857a19c13aec7') === expectedVal, 'Test failed :(');
+    assert(isAddress(TOLAR_ADDRESS_VALID_EXAMPLE_1) === expectedVal, 'Test failed :(');
   });
 
   it('should test isAddress function returns false for Tolar address with invalid checksum', () => {

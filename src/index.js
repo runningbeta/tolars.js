@@ -131,7 +131,7 @@ const isAddress = (address) => {
   return true;
 };
 
-export {
+export default {
   fromEthereumAddress,
   getEthereumAddress,
   getAddress,

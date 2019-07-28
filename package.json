@@ -1,5 +1,5 @@
 {
-  "name": "tolars.js",
+  "name": "tolars",
   "version": "0.0.1",
   "description": "Tolar utilities in JavaScript (and TypeScript).",
   "main": "./lib/index.js",
